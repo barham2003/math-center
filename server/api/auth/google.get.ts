@@ -1,8 +1,11 @@
 import { defineOAuthGoogleEventHandler } from "#imports";
+import { Tutor } from "~/server/models/tutor";
 
 export default defineOAuthGoogleEventHandler({
   async onSuccess(event, { user }) {
-    console.log(user);
+    await Tutor.findOneAndUpdate({ email: user.email }, {
+      picture: user.picture,
+    });
     await setUserSession(event, { user });
     return sendRedirect(event, "/");
   },

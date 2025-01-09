@@ -5,24 +5,20 @@ export default defineNuxtConfig({
   experimental: {
     viewTransition: true,
   },
-
   app: {
     pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "layout", mode: "out-in" },
   },
-
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
   devServer: {
     port: 3000,
   },
-
   $production: {
     routeRules: {
       "./**": { ssr: true },
     },
   },
-
   runtimeConfig: {
     oauth: {
       google: {
@@ -34,5 +30,14 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["nuxt-auth-utils"],
+  typescript: {
+    strict: false,
+    tsConfig: {
+      compilerOptions: {
+        module: "NodeNext",
+        moduleResolution: "NodeNext",
+      },
+    },
+  },
+  modules: ["nuxt-auth-utils", "@nuxtjs/tailwindcss"],
 });
