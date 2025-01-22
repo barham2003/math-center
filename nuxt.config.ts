@@ -8,6 +8,14 @@ export default defineNuxtConfig({
   app: {
     pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "layout", mode: "out-in" },
+    head: {
+      title: "MCS Management System",
+      link: [{
+        rel: "stylesheet",
+        href:
+          "https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap",
+      }],
+    },
   },
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
@@ -29,7 +37,6 @@ export default defineNuxtConfig({
       },
     },
   },
-
   typescript: {
     strict: false,
     tsConfig: {
@@ -39,5 +46,25 @@ export default defineNuxtConfig({
       },
     },
   },
-  modules: ["nuxt-auth-utils", "@nuxtjs/tailwindcss"],
+  modules: [
+    "nuxt-auth-utils",
+    "@nuxtjs/tailwindcss",
+    "@nuxt/fonts",
+    "@nuxtjs/google-fonts",
+    "shadcn-nuxt",
+  ],
+  googleFonts: {
+    families: {
+      Roboto: true,
+      "Open+Sans": [400, 700],
+    },
+    display: "swap",
+  },
+  shadcn: {
+    prefix: "",
+    /**
+     * @default "./components/ui"
+     */
+    componentDir: "./components/ui",
+  },
 });

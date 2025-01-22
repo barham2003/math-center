@@ -1,12 +1,10 @@
-import { Tutor } from "~/server/models/tutor";
+import { ROLE } from "~/server/models/role.enum";
+import { User } from "~/server/models/user";
 
 export default defineEventHandler(async (event) => {
-  console.log("GOT HERE");
-  const body = await readBody(event, { strict: false });
-  console.log(body);
-
   try {
-    const newTutor = await Tutor.create(body);
+    const body = await readBody(event, { strict: false });
+    await User.create({ ...body, role: ROLE.TUTOR });
   } catch (e: any) {
     console.log("GOT ERROR");
     console.log(e);

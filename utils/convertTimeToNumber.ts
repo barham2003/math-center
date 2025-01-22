@@ -3,5 +3,5 @@ export default function convertTimeToNumber(time: string) {
   const hoursInSeconds = Number(hours) * 60 * 60;
   const minsInSeconds = Number(mins) * 60;
   const total = hoursInSeconds + minsInSeconds;
-  console.log(total);
+  return total;
 }
