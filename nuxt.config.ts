@@ -44,10 +44,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     oauth: {
       google: {
-        clientId:
-          "390832071799-o5su3apftkr1uvqdvtnjqouj1frqde6l.apps.googleusercontent.com",
-        clientSecret: "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",
-        redirectURL: process.env.CALLBACK_URL || "http://localhost:3000/api/auth/google",
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        redirectURL: process.env.REDIRECT_URL,
       },
     },
   },
