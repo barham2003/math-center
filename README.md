@@ -1,75 +1,26 @@
-# Nuxt Minimal Starter
+A Management System for Math & Science Center of AUIS
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+There are two Roles within this system:
 
-## Setup
+- Admin
+  Admins can view, add, and delete tutors,
+  can add, and delete shifts,
+  read and export all data such ass Attendance, Tutors, and Absents
 
-Make sure to install dependencies:
+- Tutor
+  Tutors only can check in and checkout
+  Tutor has to be assigned by admins to be able sign in
 
-```bash
-# npm
-npm install
+Authentication:
+authentication within this system is all handled by Google Auth
 
-# pnpm
-pnpm install
+Conditions:
+in the environment vars if this variable is set to true, then the tutors can sign in in the system,
+otherwise they cannot access the system.
+IS_TUTOR_ALLOWED="false"
 
-# yarn
-yarn install
+A random generated string have been set to the session
+NUXT_SESSION_PASSWORD=
 
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+MongoDB Connection is required as well
+MONGO_URL="mongodb://localhost:27017/mathcenter"
