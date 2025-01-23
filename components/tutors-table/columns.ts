@@ -2,7 +2,7 @@ import { h } from "vue";
 import type { ColumnDef } from "@tanstack/vue-table";
 import DropdownAction from "./DataTableDropDown.vue";
 import type { IUser } from "~/server/models/user.js";
-import TutorPic from "./TutorPic.vue";
+import TutorPic from "../TutorPic.vue";
 
 export const columns: ColumnDef<IUser>[] = [
   {

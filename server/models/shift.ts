@@ -1,24 +1,46 @@
-import mongoose, { model, Schema } from "mongoose";
+import mongoose, { Model, model, Schema } from "mongoose";
 import convertNumberToTime from "~/utils/convertNumberToTime";
 import { IAttendance } from "./attendance";
-interface IShift {
+import { IUser } from "./user";
+
+export interface IShift {
   from: number;
   until: number;
   day: string;
-  isCheckingIn: boolean;
   attendances?: IAttendance[];
+  tutor?: IUser;
+  tutorId: mongoose.Types.ObjectId;
+  fromTime: string;
+  untilTime: string;
+  findAbsents(startDate: Date, endDate: Date): IAbsent[];
+}
+
+export interface IAbsent {
+  tutor: IUser;
+  fromTime: string;
+  untilTime: string;
+  day: string;
+  date: Date;
+}
+
+interface IShiftModel extends Model<IShift> {
+  findAbsents(
+    startDate: Date,
+    endDate: Date,
+    tutorId?: string | undefined,
+  ): Promise<IAbsent[]>;
 }
 
 const shiftSchema = new Schema({
   from: { type: Number, required: true },
   until: { type: Number, required: true },
   day: { type: String, required: true },
-  isCheckingIn: { type: Boolean, default: false },
   tutorId: { type: mongoose.Types.ObjectId, ref: "Tutor", required: true },
 }, {
   toObject: { virtuals: true },
   toJSON: { virtuals: true },
   timestamps: true,
+  statics: {},
 });
 
 shiftSchema.virtual("fromTime").get(function () {
@@ -35,39 +57,73 @@ shiftSchema.virtual("tutor", {
   foreignField: "_id",
   justOne: true,
 });
+
 shiftSchema.virtual("attendances", {
   ref: "Attendance",
   localField: "_id",
   foreignField: "shiftId",
 });
 
-shiftSchema.virtual("todayAttendance", {
-  ref: "Attendance",
-  localField: "_id",
-  foreignField: "shiftId",
-  justOne: true,
-  match: function () {
-    // Get today's date in YYYY-MM-DD format
-    const today = new Date();
+shiftSchema.statics.findAbsents = async function (
+  startDate: Date,
+  endDate: Date,
+  tutorId?: string | undefined,
+) {
+  let shifts: IShift[] = [];
+  if (tutorId) {
+    shifts = await this
+      .find({ tutorId })
+      .populate("attendances")
+      .populate({ path: "tutor" });
+  } else {
+    shifts = await this
+      .find({})
+      .populate("attendances")
+      .populate({ path: "tutor" });
+  }
 
-    const startOfDay = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate(),
-    );
-    const endOfDay = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate() + 1,
-    );
+  const absents: IAbsent[] = [];
 
-    return {
-      createdAt: {
-        $gte: startOfDay,
-        $lt: endOfDay,
-      },
-    };
-  },
-});
+  const days = getDaysInBetween(startDate, endDate);
+  days.forEach((currentDate) => {
+    const weekDay = currentDate
+      .toLocaleDateString("en-US", { weekday: "short" })
+      .toLowerCase();
 
-export const Shift = model<IShift>("Shift", shiftSchema);
+    shifts
+      .filter((shift) => shift.day === weekDay)
+      .forEach((shift) => {
+        const isAttended = shift.attendances?.find((attendance) =>
+          currentDate.toLocaleDateString() ===
+          new Date(attendance.checkinTime).toLocaleDateString()
+        );
+        if (!isAttended && shift) {
+          absents.push({
+            tutor: shift.tutor as IUser,
+            date: currentDate,
+            fromTime: shift.fromTime,
+            untilTime: shift.untilTime,
+            day: shift.day,
+          });
+        }
+      });
+  });
+
+  absents.sort((a, b) => b.date.getTime() - a.date.getTime());
+
+  return absents;
+};
+
+function getDaysInBetween(start: Date, end: Date) {
+  const days = [];
+  let current = new Date(start);
+
+  while (current <= end) {
+    days.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
+
+  return days;
+}
+
+export const Shift = model<IShift, IShiftModel>("Shift", shiftSchema);

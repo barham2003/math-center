@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-import { Trash2, Mail, Calendar, X, Check, Plus, CalendarDays, Clock10, User, MoveRight } from "lucide-vue-next";
+definePageMeta({ middleware: "admin-auth" });
+import { Trash2, ClockAlert, Mail, Calendar, X, Check, Plus, CalendarDays, Clock10, User, MoveRight } from "lucide-vue-next";
+
 import type { IUser } from "~/server/models/user";
 const route = useRoute();
 const id = route.params.id;
@@ -54,103 +56,103 @@ async function handleDeleteShift(shiftId: string) {
 </script>
 
 <template>
-  <div class="space-y-2 px-4">
-    <TutorCard :tutor="data.tutor" />
+  <div>
 
-    <Card>
-      <CardContent>
+    <div v-if="error">Could not fetch tutor</div>
+    <div v-else class="space-y-2 px-4">
+      <TutorCard :tutor="data.tutor" />
+
+      <Card>
         <CardHeader>
-          <CardTitle class="flex gap-2">
-            <CalendarDays />
-            <span>
-              Shifts
-            </span>
-
+          <CardTitle class="flex gap-2 ">
+            <CalendarDays /> <span> Shifts </span>
           </CardTitle>
         </CardHeader>
-        <Dialog :open="isAddShiftDialogOpen" @close="toggleAddShiftDialog">
-          <DialogTrigger as-child @click="toggleAddShiftDialog">
-            <Button>
-              <Plus /> Add Shift
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <form @submit.prevent="handleAddShift(data.tutor._id)" class="grid grid-cols-2 gap-2">
-              <fieldset class="flex items-center gap-2">
-                <label for="from"> From:</label>
-                <Input required id="from" placeholder="from" type="time" v-model="from" />
-              </fieldset>
-              <fieldset class="flex items-center gap-2">
-                <label for="until"> Until: </label>
-                <Input required placeholder="until" id="until" type="time" v-model="until" />
-              </fieldset>
-              <fieldset class="col-span-2">
-                <Select v-model="day">
-                  <SelectTrigger placeholder="Select A day">
-                    <SelectValue placeholder="Select A day" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Days</SelectLabel>
-                      <SelectItem v-for="day in weekdays" :key="day.code" :value="day">
-                        {{ day.name }}
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </fieldset>
-
-              <Button type="submit" class="col-span-2">
-                <Check />
-                Submit
+        <CardContent>
+          <Dialog :open="isAddShiftDialogOpen" @close="toggleAddShiftDialog">
+            <DialogTrigger as-child @click="toggleAddShiftDialog">
+              <Button>
+                <Plus /> Add Shift
               </Button>
-              <Button variant="outline" class="col-span-2" @click="toggleAddShiftDialog">
-                <X />
-                Cancel
+            </DialogTrigger>
+            <DialogContent>
+              <form @submit.prevent="handleAddShift(data.tutor._id)" class="grid grid-cols-2 gap-2">
+                <fieldset class="flex items-center gap-2">
+                  <label for="from"> From:</label>
+                  <Input required id="from" placeholder="from" type="time" v-model="from" />
+                </fieldset>
+                <fieldset class="flex items-center gap-2">
+                  <label for="until"> Until: </label>
+                  <Input required placeholder="until" id="until" type="time" v-model="until" />
+                </fieldset>
+                <fieldset class="col-span-2">
+                  <Select v-model="day">
+                    <SelectTrigger placeholder="Select A day">
+                      <SelectValue placeholder="Select A day" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Days</SelectLabel>
+                        <SelectItem v-for="day in weekdays" :key="day.code" :value="day">
+                          {{ day.name }}
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </fieldset>
 
-              </Button>
-            </form>
+                <Button type="submit" class="col-span-2">
+                  <Check />
+                  Submit
+                </Button>
+                <Button variant="outline" class="col-span-2" @click="toggleAddShiftDialog">
+                  <X />
+                  Cancel
 
-          </DialogContent>
-        </Dialog>
+                </Button>
+              </form>
 
-        <ul class="my-4 space-y-2 text-base md:text-lg" v-if="data.tutor.shifts">
-          <Card v-for="shift in data.tutor.shifts" :key="shift._id">
-            <CardContent class="flex flex-col rounded-md border py-4">
-              <div class="flex items-center gap-2">
-                <Clock10 />
-                <span> {{ shift.fromTime }} </span>
-                <span>
-                  <MoveRight />
-                </span>
-                <span> {{ shift.untilTime }} </span>
-              </div>
-              <div class="flex gap-2 items-center">
-                <Calendar />
-                <WeekCalendar class="py-2" :selected-day="shift.day" />
-              </div>
+            </DialogContent>
+          </Dialog>
 
-              <Dialog>
-                <DialogTrigger as-child class="w-10">
-                  <Button variant="ghost">
-                    <Trash2 class="text-red-500 w-10" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle> Delete shift </DialogTitle>
-                  </DialogHeader>
-                  <p class="my-2">Are you sure about deleting this shift?</p>
-                  <div class="flex gap-2">
-                    <Button variant="destructive" @click="handleDeleteShift(shift._id)" class="w-[10rem]">Yes,
-                      Delete</Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </CardContent>
-          </Card>
-        </ul>
-      </CardContent>
-    </Card>
+          <ul class="my-4 space-y-2 text-base md:text-lg" v-if="data.tutor.shifts">
+            <Card v-for="shift in data.tutor.shifts" :key="shift._id">
+              <CardContent class="flex flex-col rounded-md border py-4">
+                <div class="flex items-center gap-2">
+                  <Clock10 />
+                  <span> {{ shift.fromTime }} </span>
+                  <span>
+                    <MoveRight />
+                  </span>
+                  <span> {{ shift.untilTime }} </span>
+                </div>
+                <div class="flex gap-2 items-center">
+                  <Calendar />
+                  <WeekCalendar class="py-2" :selected-day="shift.day" />
+                </div>
+
+                <Dialog>
+                  <DialogTrigger as-child class="w-10">
+                    <Button variant="ghost">
+                      <Trash2 class="text-red-500 w-10" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle> Delete shift </DialogTitle>
+                    </DialogHeader>
+                    <p class="my-2">Are you sure about deleting this shift?</p>
+                    <div class="flex gap-2">
+                      <Button variant="destructive" @click="handleDeleteShift(shift._id)" class="w-[10rem]">Yes,
+                        Delete</Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
+          </ul>
+        </CardContent>
+      </Card>
+    </div>
   </div>
 </template>

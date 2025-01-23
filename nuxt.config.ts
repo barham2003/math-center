@@ -4,16 +4,28 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
   experimental: {
     viewTransition: true,
+    renderJsonPayloads: true,
   },
   app: {
     pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "layout", mode: "out-in" },
     head: {
-      title: "MCS Management System",
+      title: "MSC Management System",
       link: [{
         rel: "stylesheet",
         href:
           "https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap",
+      }, {
+        rel: "stylesheet",
+        href:
+          "https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap",
+      }, {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossorigin: "",
+      }, {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
       }],
     },
   },

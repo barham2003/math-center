@@ -1,7 +1,7 @@
 export default function getToday() {
-  const today = new Date()
+  let today = new Date()
     .toLocaleString("en-US", { weekday: "short" })
     .toLowerCase();
 
-  return today;
+  return today as "sun" | "mon" | "tue" | "wed" | "thu";
 }

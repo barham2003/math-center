@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { LogOut, LogIn, User, Mail } from 'lucide-vue-next'
+import { LogOut, LogIn, User, Mail, House, LayoutDashboard, Users, Clipboard } from 'lucide-vue-next'
 import { ROLE } from "../server/models/role.enum.js"
 const { loggedIn, clear, user, session, fetch: refreshSession, } = useUserSession();
+import { cn } from "~/lib/utils"
+const route = useRoute()
 
 async function logout() {
   await clear()
@@ -9,29 +11,30 @@ async function logout() {
 
 }
 
-const invisibleLink = { label: '', to: "/", isVisible: false }
+const invisibleLink = { label: '', to: "/", isVisible: false, icon: null }
 
 const dashboardLink = computed(() => {
-  // ? "/admin/dashboard" : "/tutor/dashboard";
   if (!user.value) return invisibleLink
-  else if (user.value.role === ROLE.ADMIN) return { label: "Dashboard", to: "/admin/dashboard", isVisible: true }
-  else if (user.value.role === ROLE.TUTOR) return { label: "Dashboard", to: "/tutor/dashboard", isVisible: true }
+  else if (user.value.role === ROLE.ADMIN) return { label: "Dashboard", to: "/admin/dashboard", isVisible: true, icon: LayoutDashboard }
+  else if (user.value.role === ROLE.TUTOR) return { label: "Dashboard", to: "/tutor/dashboard", isVisible: true, icon: LayoutDashboard }
 
 })
 
 let tutorsLink = computed(() => {
-  if (user.value.role === ROLE.ADMIN) return { label: "Tutors", to: "/admin/dashboard/tutors", isVisible: true }
+  if (!user.value) return invisibleLink
+  else if (user.value.role === ROLE.ADMIN) return { label: "Tutors", to: "/admin/dashboard/tutors", isVisible: true, icon: Users }
   else return invisibleLink
 })
 
 let attendancesLink = computed(() => {
-  if (user.value.role === ROLE.ADMIN) return { label: "Attendances", to: "/admin/dashboard/attendances", isVisible: true }
-  else return invisibleLink
+  if (!user.value) return invisibleLink
+  else if (user.value.role === ROLE.TUTOR) return invisibleLink
+  else if (user.value.role === ROLE.ADMIN) return { label: "Attendances", to: "/admin/dashboard/attendances", isVisible: true, icon: Clipboard }
 })
 
 
 const links = [
-  { label: "Home", to: "/", isVisible: true },
+  { label: "Home", to: "/", isVisible: true, icon: House },
   dashboardLink.value,
   tutorsLink.value,
   attendancesLink.value,
@@ -41,12 +44,14 @@ const links = [
 </script>
 
 <template>
-  <nav class="flex w-full justify-between items-center px-4  h-[4rem] border-b border-input">
+  <nav
+    class="flex w-full bg-background text-gray-600 justify-between items-center px-5  h-[4rem] border-b border-input">
     <div>
       <ul class="flex items-center gap-4">
         <li v-for="link in links" :key="link.to">
-          <NuxtLink :to="link?.to" v-if="link.isVisible">
-            {{ link.label }}
+          <NuxtLink :to="link?.to" v-if="link.isVisible"
+            :class="cn(route.path === link.to && 'text-primary font-bold')">
+            <component :is="link.icon" v-if="link.icon && link.isVisible" class="mr-2" />
           </NuxtLink>
         </li>
       </ul>
@@ -56,7 +61,7 @@ const links = [
       <Popover>
         <PopoverTrigger>
           <Avatar>
-            <AvatarImage :src="user.picture" alt="@radix-vue" class="h-[3rem]  rounded-md " />
+            <AvatarImage v-if="user.picture" :src="user?.picture" alt="@radix-vue" class="h-[3rem]  rounded-md " />
             <AvatarFallback>{{ user.name }}</AvatarFallback>
           </Avatar>
         </PopoverTrigger>
@@ -77,7 +82,6 @@ const links = [
     </div>
     <div v-else>
       <a href="api/auth/google">
-
         <!-- <a href="api/auth/google">google</a> -->
         <Button variant="outline">
           <LogIn />

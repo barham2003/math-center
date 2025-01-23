@@ -1,30 +1,39 @@
 <script setup lang="ts" generic="TData, TValue">
-import type { ColumnDef } from '@tanstack/vue-table'
+import type { ColumnDef, ColumnFiltersState, } from '@tanstack/vue-table'
+import valueUpdater from "~/utils/valueUpdater";
+import { IAttendance } from "~/server/models/attendance";
+import { Input } from '@/components/ui/input'
+import { FlexRender, getCoreRowModel, useVueTable, getPaginationRowModel, PaginationState, getFilteredRowModel, } from '@tanstack/vue-table'
 import type { IUser } from "~/server/models/user.js";
-
-
-import {
-  FlexRender, getCoreRowModel, useVueTable,
-  getPaginationRowModel,
-  PaginationState
-} from '@tanstack/vue-table'
 
 const props = defineProps<{
   columns: ColumnDef<any, any>[]
-  data: IUser[]
+  data: IAttendance[],
+  filterKey?: string
 }>()
 
 
+const columnFilters = ref<ColumnFiltersState>([])
 const table = useVueTable({
   get data() { return props.data },
   get columns() { return props.columns },
   getCoreRowModel: getCoreRowModel(),
   getPaginationRowModel: getPaginationRowModel({ initialSync: true }),
+  onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
+  getFilteredRowModel: getFilteredRowModel(),
+  state: {
+    get columnFilters() { return columnFilters.value },
+  }
 })
 </script>
 
 <template>
-  <div class="border rounded-md">
+  <div class="border bg-background rounded-md">
+
+    <div class="flex items-center py-4 px-2" v-if="props.filterKey">
+      <Input class="max-w-sm" placeholder="Search" :model-value="table.getColumn(props.filterKey)?.getFilterValue()"
+        @update:model-value="table.getColumn(props.filterKey)?.setFilterValue($event)" />
+    </div>
     <Table>
       <TableHeader>
         <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">

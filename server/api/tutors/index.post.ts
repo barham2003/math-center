@@ -3,6 +3,9 @@ import { User } from "~/server/models/user";
 
 export default defineEventHandler(async (event) => {
   try {
+    const { user } = await requireUserSession(event);
+    if (!user || user.role !== ROLE.ADMIN) throw new Error("not authed");
+
     const body = await readBody(event, { strict: false });
     await User.create({ ...body, role: ROLE.TUTOR });
   } catch (e: any) {

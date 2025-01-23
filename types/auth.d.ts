@@ -2,10 +2,11 @@ import type { ROLE } from "~/server/models/role.enum.ts";
 
 declare module "#auth-utils" {
   interface User {
+    name: string;
     email: string;
     role: ROLE;
-    picutre: string;
+    picture: string;
     id: string;
   }
 }
-export {};
+export { };

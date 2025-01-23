@@ -14,6 +14,8 @@ export interface IUser {
   shifts: IShift[];
   picture?: string;
   role: ROLE;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const userSchema = new Schema({
