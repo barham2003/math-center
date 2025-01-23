@@ -1,4 +1,6 @@
 import { defineNuxtConfig } from "nuxt/config";
+import "dotenv/config"
+import "process"
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -45,7 +47,7 @@ export default defineNuxtConfig({
         clientId:
           "390832071799-o5su3apftkr1uvqdvtnjqouj1frqde6l.apps.googleusercontent.com",
         clientSecret: "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",
-        redirectURL: "http://localhost:3000/api/auth/google",
+        redirectURL: process.env.CALLBACK_URL || "http://localhost:3000/api/auth/google",
       },
     },
   },
