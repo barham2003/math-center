@@ -5,12 +5,14 @@ const props = withDefaults(defineProps<{ data: any[]; name?: string }>(), {
   name: "generated.csv",
 });
 
+const data = computed(() => props.data)
+
 const csvConfig = mkConfig({
   useKeysAsHeaders: true,
   filename: props.name + " " + new Date().toLocaleDateString(),
 });
 const csv =
-  props.data.length > 0 ? generateCsv(csvConfig)(props.data) : undefined;
+  data.value.length > 0 ? generateCsv(csvConfig)(data.value) : undefined;
 </script>
 
 <template>
