@@ -23,8 +23,7 @@ const { data, error } = await useFetch<IAbsent[]>(() => {
 }, { key: "absents", watch: [dates] });
 
 
-const formattedData = data.value.map((absent) => {
-
+const formattedData = data.value?.map((absent) => {
   return {
     name: absent.tutor.name,
     email: absent.tutor.email,

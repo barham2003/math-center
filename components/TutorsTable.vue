@@ -5,7 +5,7 @@ const { data, error } = await useFetch<IUser[]>("/api/tutors", {
   key: "tutors",
 });
 
-const formattedData = data.value.map((tutor) => {
+const formattedData = data.value?.map((tutor) => {
   return {
     name: tutor.name,
     email: tutor.email,
@@ -20,12 +20,7 @@ const formattedData = data.value.map((tutor) => {
       <div v-if="error" class="text-red-500">Failed to load tutors</div>
       <div v-else-if="data">
         <DownloadCsvButton :data="formattedData" name="Tutors Data" />
-        <DataTable
-          :columns="columns"
-          :data="data"
-          class="w-full"
-          filter-key="name"
-        />
+        <DataTable :columns="columns" :data="data" class="w-full" filter-key="name" />
       </div>
       <div v-else class="text-gray-500">Loading tutors...</div>
     </div>
