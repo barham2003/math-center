@@ -23,17 +23,19 @@ const { data, error } = await useFetch<IAbsent[]>(() => {
 }, { key: "absents", watch: [dates] });
 
 
-const formattedData = data.value?.map((absent) => {
-  return {
-    name: absent.tutor.name,
-    email: absent.tutor.email,
-    date: absent.date,
-    day: absent.day,
-    from: absent.fromTime,
-    until: absent.untilTime,
-  }
-})
+const formattedData = computed(() => {
+  return data.value?.map((absent) => {
+    return {
+      name: absent.tutor.name,
+      email: absent.tutor.email,
+      date: absent.date,
+      day: absent.day,
+      from: absent.fromTime,
+      until: absent.untilTime,
+    }
+  })
 
+}) 
 </script>
 
 <template>
