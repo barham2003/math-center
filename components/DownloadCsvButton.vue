@@ -11,8 +11,10 @@ const csvConfig = mkConfig({
   useKeysAsHeaders: true,
   filename: props.name + " " + new Date().toLocaleDateString(),
 });
-const csv =
-  data.value.length > 0 ? generateCsv(csvConfig)(data.value) : undefined;
+
+const csv = computed(() => {
+  return data.value.length > 0 ? generateCsv(csvConfig)(data.value) : undefined;
+})
 </script>
 
 <template>
