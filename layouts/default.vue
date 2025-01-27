@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-[#f5f8ff] min-h-screen ">
+  <div class="min-h-screen bg-[#f5f8ff]">
     <AppHeader />
-    <div class="p-4 max-w-[1400px] mx-auto ">
+    <div class="mx-auto max-w-[1400px] p-4">
       <slot />
     </div>
   </div>

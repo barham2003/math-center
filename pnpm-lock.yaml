@@ -23,6 +23,9 @@ importers:
       '@tanstack/vue-table':
         specifier: ^8.20.5
         version: 8.20.5(vue@3.5.13(typescript@5.7.2))
+      '@types/lodash':
+        specifier: ^4.17.14
+        version: 4.17.14
       '@types/mongoose':
         specifier: ^5.11.97
         version: 5.11.97
@@ -41,6 +44,9 @@ importers:
       jose:
         specifier: ^5.9.6
         version: 5.9.6
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       lucide-vue-next:
         specifier: ^0.471.0
         version: 0.471.0(vue@3.5.13(typescript@5.7.2))
@@ -1076,6 +1082,9 @@ packages:
 
   '@types/http-proxy@1.17.15':
     resolution: {integrity: sha512-25g5atgiVNTIv0LBDTg1H74Hvayx0ajtJPLLcYE3whFv75J0pWNtOBzaXJQgDTmrX1bx5U9YC2w/n65BN1HwRQ==}
+
+  '@types/lodash@4.17.14':
+    resolution: {integrity: sha512-jsxagdikDiDBeIRaPYtArcT8my4tN1og7MtMRquFT3XNA6axxyHDRUemqDz/taRDdOUn0GnGHRCuff4q48sW9A==}
 
   '@types/mongoose@5.11.97':
     resolution: {integrity: sha512-cqwOVYT3qXyLiGw7ueU2kX9noE8DPGRY6z8eUxudhXY8NZ7DMKYAxyZkLSevGfhCX3dO/AoX5/SO9lAzfjon0Q==}
@@ -5162,6 +5171,8 @@ snapshots:
   '@types/http-proxy@1.17.15':
     dependencies:
       '@types/node': 22.10.5
+
+  '@types/lodash@4.17.14': {}
 
   '@types/mongoose@5.11.97':
     dependencies:

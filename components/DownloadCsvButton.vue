@@ -5,7 +5,7 @@ const props = withDefaults(defineProps<{ data: any[]; name?: string }>(), {
   name: "generated.csv",
 });
 
-const data = computed(() => props.data)
+const data = computed(() => props.data);
 
 const csvConfig = mkConfig({
   useKeysAsHeaders: true,
@@ -14,10 +14,17 @@ const csvConfig = mkConfig({
 
 const csv = computed(() => {
   return data.value.length > 0 ? generateCsv(csvConfig)(data.value) : undefined;
-})
+});
+
+function createError() {
+  throw new Error("error")
+
+}
+
 </script>
 
 <template>
+
   <Button @click="download(csvConfig)(csv)" class="my-2">
     <ArrowDownToLine />
     Download CSV

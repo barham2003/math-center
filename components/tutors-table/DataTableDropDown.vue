@@ -46,7 +46,9 @@ function toggleModal() {
         </DialogHeader>
         <p class="my-2">Are you sure about deleting this tutor?</p>
         <div class="flex gap-2">
-          <Button variant="destructive" @click="handleDeleteTutor(tutor._id)"
+          <Button
+            variant="destructive"
+            @click="handleDeleteTutor(tutor._id.toString())"
             >Yes, Delete</Button
           >
           <Button variant="outline" @click="toggleModal">Cancel</Button>

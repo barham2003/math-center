@@ -11,5 +11,5 @@ export default defineEventHandler(async (event) => {
   await Shift.findOne();
   const tutor = await User.findById(id).populate("shifts");
 
-  return { tutor, status: "success" };
+  return tutor
 });

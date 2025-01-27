@@ -4,26 +4,27 @@ import "dotenv/config";
 import process from "process";
 import { ROLE } from "~/server/models/role.enum";
 
+const isTutorAllowed = process.env.IS_TUTOR_ALLOWED === "true";
+
 export default defineOAuthGoogleEventHandler({
   async onSuccess(event, { user }) {
-    const isTutorAllowed = process.env.IS_TUTOR_ALLOWED === "true";
-
-    const foundUser = await User.findOneAndUpdate({ email: user.email }, {
-      name: user.name,
-      picture: user.picture,
-    });
+    const foundUser = await User.findOneAndUpdate(
+      { email: user.email },
+      { name: user.name, picture: user.picture },
+    );
 
     if (!foundUser) return sendRedirect(event, "/");
-    if (foundUser.role === ROLE.TUTOR && !isTutorAllowed) {
+
+    if (foundUser.role === ROLE.TUTOR && !isTutorAllowed)
       return sendRedirect(event, "/");
-    }
+
     await setUserSession(event, {
       user: {
         name: user.name,
-        picture: user.picture as string,
+        picture: user.picture,
         email: user.email,
         role: foundUser.role,
-        id: foundUser?._id,
+        id: foundUser?._id.toString(),
       },
     });
     return sendRedirect(event, "/");

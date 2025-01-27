@@ -1,11 +1,5 @@
 <script setup lang="ts">
-const {
-  loggedIn,
-  clear,
-  user,
-  session,
-  fetch: refreshsession,
-} = useUserSession();
+const { loggedIn, clear, user, session } = useUserSession();
 </script>
 
 <template>

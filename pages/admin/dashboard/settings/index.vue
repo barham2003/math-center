@@ -13,18 +13,10 @@ const { data: admins, error: adminError } =
     </div>
     <div v-if="adminError" class="text-red-500">Failed to load admins</div>
     <ul v-else-if="admins" class="w-full space-y-2">
-      <li
-        v-for="admin in admins"
-        :key="admin._id"
-        class="rounded bg-gray-50 p-4"
-      >
+      <li v-for="admin in admins" :key="admin._id" class="rounded bg-white p-4">
         <div class="flex items-center gap-4">
           <Avatar>
-            <AvatarImage
-              :src="admin.picture"
-              alt="@radix-vue"
-              class="h-[3rem] rounded-md"
-            />
+            <AvatarImage :src="admin.picture" alt="@radix-vue" class="h-[3rem] rounded-md" />
             <AvatarFallback>{{ admin.name }}</AvatarFallback>
           </Avatar>
 

@@ -2,22 +2,18 @@
 definePageMeta({ middleware: "admin-auth" });
 import {
   Trash2,
-  ClockAlert,
-  Mail,
   Calendar,
   X,
   Check,
   Plus,
   CalendarDays,
   Clock10,
-  User,
   MoveRight,
 } from "lucide-vue-next";
 
-import type { IUser } from "~/server/models/user";
 const route = useRoute();
 const id = route.params.id;
-const { data, error, refresh } = useFetch(`/api/tutors/${id}`);
+const { data: tutor, error, refresh } = useFetch(`/api/tutors/${id}`);
 const isAddShiftDialogOpen = ref(false);
 
 function toggleAddShiftDialog() {
@@ -70,7 +66,7 @@ async function handleDeleteShift(shiftId: string) {
   <div>
     <div v-if="error">Could not fetch tutor</div>
     <div v-else class="space-y-2 px-4">
-      <TutorCard :tutor="data.tutor" />
+      <TutorCard :tutor="tutor" />
 
       <Card>
         <CardHeader>
@@ -85,7 +81,7 @@ async function handleDeleteShift(shiftId: string) {
             </DialogTrigger>
             <DialogContent>
               <form
-                @submit.prevent="handleAddShift(data.tutor._id)"
+                @submit.prevent="handleAddShift(tutor._id)"
                 class="grid grid-cols-2 gap-2"
               >
                 <fieldset class="flex items-center gap-2">
@@ -144,11 +140,8 @@ async function handleDeleteShift(shiftId: string) {
             </DialogContent>
           </Dialog>
 
-          <ul
-            class="my-4 space-y-2 text-base md:text-lg"
-            v-if="data.tutor.shifts"
-          >
-            <Card v-for="shift in data.tutor.shifts" :key="shift._id">
+          <ul class="my-4 space-y-2 text-base md:text-lg" v-if="tutor.shifts">
+            <Card v-for="shift in tutor.shifts" :key="shift._id">
               <CardContent class="flex flex-col rounded-md border py-4">
                 <div class="flex items-center gap-2">
                   <Clock10 />

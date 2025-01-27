@@ -1,15 +1,20 @@
 <script lang="ts" setup>
-import { Mail } from "lucide-vue-next"
-import { IUser } from "~/server/models/user"
+import { Mail } from "lucide-vue-next";
+import type { IUser } from "~/server/models/user";
 const { tutor } = defineProps<{
-  tutor: IUser | { picture: string, name: string, email: string }
-}>()
+  tutor: IUser | { picture: string; name: string; email: string };
+}>();
 </script>
 <template>
   <Card>
     <CardHeader class="flex flex-col items-center space-y-4">
       <Avatar class="h-24 w-24">
-        <AvatarImage v-if="tutor.picture" :src="tutor.picture" alt="user pic" class="rounded-md" />
+        <AvatarImage
+          v-if="tutor.picture"
+          :src="tutor.picture"
+          alt="user pic"
+          class="rounded-md"
+        />
         <AvatarFallback v-else>
           <User class="h-full w-full" />
         </AvatarFallback>
@@ -19,8 +24,7 @@ const { tutor } = defineProps<{
       </CardTitle>
     </CardHeader>
     <CardContent class="space-y-4">
-      <p class="text-sm flex gap-2 items-center">
-
+      <p class="flex items-center gap-2 text-sm">
         <Mail />
         {{ tutor.email }}
       </p>
