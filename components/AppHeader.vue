@@ -13,13 +13,21 @@ import { ROLE } from "../server/models/role.enum.js";
 import { cn } from "~/lib/utils";
 
 const { loggedIn, clear, user, session } = useUserSession();
+console.log(session.value)
 const route = useRoute();
-const hasVerifyToken = useCookie("verify-token")
+const hasVerifyToken = ref("")
 
 async function logout() {
   await clear();
   await navigateTo("/");
 }
+
+onMounted(async () => {
+  hasVerifyToken.value = useCookie("verify-token").value
+  setInterval(async () => {
+    hasVerifyToken.value = useCookie("verify-token").value
+  }, 3000)
+});
 
 const invisibleLink = { label: "", to: "/", isVisible: false, icon: null };
 
