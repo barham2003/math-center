@@ -14,6 +14,7 @@ import { cn } from "~/lib/utils";
 
 const { loggedIn, clear, user, session } = useUserSession();
 const route = useRoute();
+const hasVerifyToken = useCookie("verify-token")
 
 async function logout() {
   await clear();
@@ -73,58 +74,50 @@ const links = [
 </script>
 
 <template>
-  <nav
-    class="flex h-[4rem] w-full items-center justify-between border-b border-input bg-background px-5 text-gray-600"
-  >
+  <nav class="flex h-[4rem] w-full items-center justify-between border-b border-input bg-background px-5 text-gray-600">
     <div>
       <ul class="flex items-center gap-4">
         <li v-for="link in links" :key="link.to">
-          <NuxtLink
-            :to="link?.to"
-            v-if="link.isVisible"
-            :class="cn(route.path === link.to && 'font-bold text-primary')"
-          >
-            <component
-              :is="link.icon"
-              v-if="link.icon && link.isVisible"
-              class="mr-2"
-            />
+          <NuxtLink :to="link?.to" v-if="link.isVisible"
+            :class="cn(route.path === link.to && 'font-bold text-primary')">
+            <component :is="link.icon" v-if="link.icon && link.isVisible" class="mr-2" />
           </NuxtLink>
         </li>
       </ul>
     </div>
 
-    <div v-if="loggedIn" class="flex flex-col gap-1">
-      <Popover>
-        <PopoverTrigger>
-          <Avatar>
-            <AvatarImage
-              v-if="user.picture"
-              :src="user?.picture"
-              alt="@radix-vue"
-              class="h-[3rem] rounded-md"
-            />
-            <AvatarFallback>{{ user.name }}</AvatarFallback>
-          </Avatar>
-        </PopoverTrigger>
-        <PopoverContent>
-          <div class="">
-            <p class="flex gap-2"><User /> {{ session.user.name }}</p>
-            <p class="flex gap-2"><Mail /> {{ session.user.email }}</p>
-          </div>
-          <Button @click="logout">
-            <LogOut />
+    <div v-if="hasVerifyToken">
+      <div v-if="loggedIn" class="flex flex-col gap-1">
+        <Popover>
+          <PopoverTrigger>
+            <Avatar>
+              <AvatarImage v-if="user.picture" :src="user?.picture" alt="@radix-vue" class="h-[3rem] rounded-md" />
+              <AvatarFallback>{{ user.name }}</AvatarFallback>
+            </Avatar>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div class="">
+              <p class="flex gap-2">
+                <User /> {{ session.user.name }}
+              </p>
+              <p class="flex gap-2">
+                <Mail /> {{ session.user.email }}
+              </p>
+            </div>
+            <Button @click="logout">
+              <LogOut />
+            </Button>
+          </PopoverContent>
+        </Popover>
+      </div>
+      <div v-else>
+        <a href="api/auth/google">
+          <!-- <a href="api/auth/google">google</a> -->
+          <Button variant="outline">
+            <LogIn />
           </Button>
-        </PopoverContent>
-      </Popover>
-    </div>
-    <div v-else>
-      <a href="api/auth/google">
-        <!-- <a href="api/auth/google">google</a> -->
-        <Button variant="outline">
-          <LogIn />
-        </Button>
-      </a>
+        </a>
+      </div>
     </div>
   </nav>
 </template>
