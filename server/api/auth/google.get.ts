@@ -15,8 +15,9 @@ export default defineOAuthGoogleEventHandler({
 
     if (!foundUser) return sendRedirect(event, "/");
 
-    if (foundUser.role === ROLE.TUTOR && !isTutorAllowed)
+    if (foundUser.role === ROLE.TUTOR && !isTutorAllowed) {
       return sendRedirect(event, "/");
+    }
 
     await setUserSession(event, {
       user: {
